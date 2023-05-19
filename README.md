@@ -24,7 +24,7 @@ YOUR_FOLDER
 In your folder, execute the ***npi_import.py***.
 ```prompt
 YOUR_FOLDER
-
+ └ npi_import.py
 ```
 You have 4 options to provide the NPI numbers that will be imported. Input the option that best suits your needs (A, B, C or D).
 ```prompt
