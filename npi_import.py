@@ -1,8 +1,12 @@
-import sys
+import os
 import sqlite3
 import requests
 import json
 import pandas as pd
+
+# Create raw folder if not exists
+if not os.path.exists("raw"):
+    os.makedirs("raw")
 
 # Create NPI Database and it's connection
 connection = sqlite3.connect('npi.db')
@@ -45,13 +49,15 @@ def get_npi(NPI_NUMBER_RAW,IDX_NUM,LIST_LEN):
         except:
             print(str(NPI_NUMBER)+' is invalid.')
             return None
-
+        
         if LIST_LEN > 1:
             print('\r'+str(IDX_NUM+1)+'/'+str(LIST_LEN)+' '+str(NPI_NUMBER)+' | ..',end='')
 
         response.raise_for_status()
         data = response.json()
-
+        if "Errors" in data:
+            return None
+        
         # Extract the relevant information from the response
         if data['result_count'] > 0 and "results" in data:
             result = data['results'][0]
@@ -66,7 +72,7 @@ def get_npi(NPI_NUMBER_RAW,IDX_NUM,LIST_LEN):
             created_epoch = result['created_epoch']
             enumeration_type = result['enumeration_type']
             last_updated_epoch = result['last_updated_epoch']
-            
+
             organization_name = basic.get('organization_name',None)
             organizational_subpart = basic.get('organizational_subpart',None)
             parent_organization_legal_business_name = basic.get('parent_organization_legal_business_name',None)
@@ -160,15 +166,7 @@ def get_npi(NPI_NUMBER_RAW,IDX_NUM,LIST_LEN):
             )
 
         else:
-            if LIST_LEN > 1:
-                print('\r'+str(IDX_NUM+1)+'/'+str(LIST_LEN)+' '+str(NPI_NUMBER)+' | Error\n',end='')
-            else:
-                print('\rNPI number: '+str(item)+' | Error\n',end='')
             return None
-        if LIST_LEN > 1:
-            print('\r'+str(IDX_NUM+1)+'/'+str(LIST_LEN)+' '+str(NPI_NUMBER)+' | Success\n',end='')
-        else:
-            print('\rNPI number: '+str(NPI_NUMBER)+' | Success\n',end='')
         return responses
 
     except requests.exceptions.RequestException as e:
@@ -205,6 +203,9 @@ if import_mode == 'A':
         response = get_npi(npi_to_import,1,1)
         if response != None:
             write_record(response)
+            print('\rNPI number: '+str(npi_to_import)+' | Success\n',end='')
+        else:
+            print('\rNPI number: '+str(npi_to_import)+' | Error\n',end='')
         continue
 
 
@@ -223,6 +224,9 @@ else:
         response = get_npi(item,idx,len(list_to_import))
         if response != None:
             write_record(response)
+            print('\r'+str(idx+1)+'/'+str(len(list_to_import))+' '+str(item)+' | Success\n',end='')
+        else:
+            print('\r'+str(idx+1)+'/'+str(len(list_to_import))+' '+str(item)+' | Error\n',end='')
     connection.close()    
     print('Done!')
     print('\n')
