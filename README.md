@@ -7,7 +7,7 @@ The following solution uses SQLite and local storage to facilitate the developme
 - [DB Browser](https://sqlitebrowser.org/dl/) (or equivalent), to access the Database.
 
 ## Installation
-Extract all the downloaded files to a folder. The final result looks like this:
+Extract all the downloaded files into a folder. The final result looks like this:
 ```prompt
 YOUR_FOLDER
  ╘ raw
