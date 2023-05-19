@@ -40,7 +40,7 @@ In case of a manual input, enter the NPI number, in it's raw format, without any
 ```prompt
 NPI number: 1396266011
 ```
-In case you need to import a list of NPI numbers, use the CSV, Excel, or JSON options, filling all your NPI numbers into one of the files:
+In case you need to import a list of NPI numbers, use the CSV, Excel, or JSON options, filling all your NPI numbers into one of the files, also in a raw format:
 ```prompt
 YOUR_FOLDER
  └ to_import.csv
